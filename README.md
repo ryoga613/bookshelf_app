@@ -54,11 +54,15 @@ erDiagram
         bigint_unsigned id PK
         bigint_unsigned review_id FK
         bigint_unsigned user_id FK
+        timestamp created_at
+        timestamp updated_at
     }
 
     genres {
         bigint_unsigned id PK
         varchar_255 name
+        timestamp created_at
+        timestamp updated_at
     }
 
     book_genre {
