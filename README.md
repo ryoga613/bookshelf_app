@@ -32,7 +32,7 @@ erDiagram
         timestamp updated_at
     }
 
-    favorite {
+    favorites {
         bigint_unsigned id PK
         bigint_unsigned user_id FK
         bigint_unsigned book_id FK
@@ -73,13 +73,36 @@ erDiagram
         timestamp updated_at 
     }
 
+    reading_plans{
+        bigint_unsigned id PK
+        bigint_unsigned user_id FK
+        bigint_unsigned book_id FK
+        tinyInt_unsigned status
+        date target_date
+        timestamp created_at
+        timestamp updated_at 
+    }
+
+    notifications{
+        bigint_unsigned id PK
+        bigint_unsigned user_id FK
+        string type
+        text data
+        timestamp read_at
+        timestamp created_at
+        timestamp updated_at    
+    }
+
+users ||--o{ reading_plans : "has many"
+users ||--o{ notifications : "has many"
 users ||--o{ reviews : "has many"
 users ||--o{ review_likes : "has many"
-users ||--o{ favorite : "has many"
+users ||--o{ favorites : "has many"
 
-books ||--o{ favorite : "has many"
+books ||--o{ favorites : "has many"
 books ||--o{ book_genre : "has many"
 books ||--o{ reviews : "has many"
+books ||--o{ reading_plans :"has many"
 
 
 genres ||--o{ book_genre : "has many"
