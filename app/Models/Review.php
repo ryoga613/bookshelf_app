@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\User;
 
 class Review extends Model
 {
@@ -19,19 +18,18 @@ class Review extends Model
         'comment',
     ];
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function book() : BelongsTo
+    public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
     }
 
-    public function reviewLikes() : HasMany
+    public function reviewLikes(): HasMany
     {
         return $this->hasMany(ReviewLike::class);
     }
 }
-

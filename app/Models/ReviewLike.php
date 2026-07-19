@@ -15,14 +15,13 @@ class ReviewLike extends Model
         'review_id',
     ];
 
-    public function user() :BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function review() :BelongsTo
+    public function review(): BelongsTo
     {
         return $this->belongsTo(Review::class);
     }
 }
-
