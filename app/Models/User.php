@@ -67,4 +67,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function books() : HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
+    public function genres()
+    {
+        return $this->hasMany(Genre::class);
+    }
 }
