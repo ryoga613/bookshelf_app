@@ -22,6 +22,7 @@ erDiagram
 
     books {
         bigint_unsigned id PK
+        bigint_unsigned user_id FK
         varchar_255 title
         varchar_255 author
         varchar_255 isbn
@@ -98,6 +99,7 @@ users ||--o{ notifications : "has many"
 users ||--o{ reviews : "has many"
 users ||--o{ review_likes : "has many"
 users ||--o{ favorites : "has many"
+users ||--o{ books : "hasMany"
 
 books ||--o{ favorites : "has many"
 books ||--o{ book_genre : "has many"
