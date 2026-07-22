@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,9 +44,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function favorites(): HasMany
+    public function favoriteBooks(): BeLongsToMany
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsToMany(Book::class, 'favorites');
     }
 
     public function reviews(): HasMany
@@ -53,9 +54,9 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-    public function reviewLikes(): HasMany
+    public function reviewLikes(): BelongsToMany
     {
-        return $this->hasMany(ReviewLike::class);
+        return $this->belongsToMany(ReviewLike::class,'review_likes');
     }
 
     public function readingPlans(): HasMany
