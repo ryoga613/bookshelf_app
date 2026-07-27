@@ -26,11 +26,7 @@ class StoreGenreRequest extends FormRequest
         $genre = $this->route('genre');
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('genre', 'name')->ignore($genre),
+            'name' => ['required', 'string', 'max:255', Rule::unique('genre', 'name')->ignore($genre),
             ],
         ];
     }

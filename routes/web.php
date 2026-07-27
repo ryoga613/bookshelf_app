@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReviewController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +21,46 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return 'Hello, World!';
-    });
+
+    // bookコントローラーのルート
+    Route::get('books/', [BookController::class, 'index'])->name('books.index');
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::get('/books/show/{book}', [BookController::class, 'show'])->name('books.show');
+    Route::post('/books', [BookController::class, 'store'])->name('books.store');
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
+    // reviewコントローラーのルート
+    Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'delete'])->name('reviews.destroy');
+
+    // 準備中
+    Route::get('/ranking', function () {
+        return '準備中';
+    })->name('ranking.index');
+    Route::get('/favorite', function () {
+        return '準備中';
+    })->name('favorites.index');
+    Route::get('/genres', function () {
+        return '準備中';
+    })->name('genres.index');
+    Route::get('/reports', function () {
+        return '準備中';
+    })->name('reports.index');
+    Route::get('/reading-plans', function () {
+        return '準備中';
+    })->name('reading-plans.index');
+    Route::get('/notifications', function () {
+        return '準備中';
+    })->name('notifications.index');
+    Route::post('/books/{book}/favorites', function () {
+        return '準備中';
+    })->name('favorites.toggle');
+    Route::post('/reviews/{review}/like', function () {
+        return '準備中';
+    })->name('reviews.like');
 });

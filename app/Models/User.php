@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -44,7 +44,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function favoriteBooks(): BeLongsToMany
+    public function favoriteBooks(): BelongsToMany
     {
         return $this->belongsToMany(Book::class, 'favorites');
     }
@@ -54,9 +54,14 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-    public function reviewLikes(): BelongsToMany
+    public function likedReviews(): BelongsToMany
     {
-        return $this->belongsToMany(ReviewLike::class,'review_likes');
+        return $this->belongsToMany(ReviewLike::class, 'review_likes');
+    }
+
+    public function getLikedReviewsAttribute()
+    {
+        return $this->likes ?? collect();
     }
 
     public function readingPlans(): HasMany
@@ -69,10 +74,16 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
-    public function books() : HasMany
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
+
+    public function books(): HasMany
     {
         return $this->hasMany(Book::class);
     }
+
     public function genres()
     {
         return $this->hasMany(Genre::class);
