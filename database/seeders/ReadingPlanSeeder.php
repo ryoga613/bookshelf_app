@@ -45,74 +45,74 @@ class ReadingPlanSeeder extends Seeder
         // -------------------------------------------------------------
         // シナリオ A: 山田太郎（メインユーザー）の読書計画データ集約
         // -------------------------------------------------------------
-        
+
         $plansData = [
             // パターン1: 【未着手】目標日が未来（正常な予定）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[0]->id,
-                'status'      => 0, // 読みたい
+                'user_id' => $mainUser->id,
+                'book_id' => $books[0]->id,
+                'status' => 0, // 読みたい
                 'target_date' => $today->copy()->addDays(7), // 7日後
             ],
             // パターン2: 【未着手】目標日が今日（リマインド・期限当日発火用）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[1]->id,
-                'status'      => 0, // 読みたい
+                'user_id' => $mainUser->id,
+                'book_id' => $books[1]->id,
+                'status' => 0, // 読みたい
                 'target_date' => $today->copy(), // 今日
             ],
             // パターン3: 【未着手】目標日が過去（期限切れ・遅延フラグ等の発火用）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[2]->id,
-                'status'      => 0, // 読みたい
+                'user_id' => $mainUser->id,
+                'book_id' => $books[2]->id,
+                'status' => 0, // 読みたい
                 'target_date' => $today->copy()->subDays(3), // 3日前
             ],
             // パターン4: 【進行中】目標日が未来（順調な進行）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[3]->id,
-                'status'      => 1, // 読書中
+                'user_id' => $mainUser->id,
+                'book_id' => $books[3]->id,
+                'status' => 1, // 読書中
                 'target_date' => $today->copy()->addDays(14), // 14日後
             ],
             // パターン5: 【進行中】目標日が過去（読書中だが期限オーバー）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[4]->id,
-                'status'      => 1, // 読書中
+                'user_id' => $mainUser->id,
+                'book_id' => $books[4]->id,
+                'status' => 1, // 読書中
                 'target_date' => $today->copy()->subDays(1), // 1日前
             ],
             // パターン6: 【完了】目標日より前に完了（達成済み）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[5]->id,
-                'status'      => 2, // 読了
+                'user_id' => $mainUser->id,
+                'book_id' => $books[5]->id,
+                'status' => 2, // 読了
                 'target_date' => $today->copy()->addDays(5),
             ],
             // パターン7: 【完了】過去に設定して過去に読了（過去履歴用）
             [
-                'user_id'     => $mainUser->id,
-                'book_id'     => $books[6]->id,
-                'status'      => 2, // 読了
+                'user_id' => $mainUser->id,
+                'book_id' => $books[6]->id,
+                'status' => 2, // 読了
                 'target_date' => $today->copy()->subDays(10),
             ],
 
             // -------------------------------------------------------------
             // シナリオ B: 佐藤花子（他ユーザー）のデータ（認可・他人のデータ非表示/変更不可テスト用）
             // -------------------------------------------------------------
-            
+
             // 他人の進行中データ（山田太郎が編集・削除しようとした際に403 Forbiddenになるかテスト）
             [
-                'user_id'     => $otherUser->id,
-                'book_id'     => $books[7]->id,
-                'status'      => 1, // 読書中
+                'user_id' => $otherUser->id,
+                'book_id' => $books[7]->id,
+                'status' => 1, // 読書中
                 'target_date' => $today->copy()->addDays(3),
             ],
             // 他人の未着手データ
             [
-                'user_id'     => $otherUser->id,
-                'book_id'     => $books[8]->id,
-                'status'      => 0, // 読みたい
+                'user_id' => $otherUser->id,
+                'book_id' => $books[8]->id,
+                'status' => 0, // 読みたい
                 'target_date' => $today->copy()->subDays(2),
             ],
         ];
@@ -125,7 +125,7 @@ class ReadingPlanSeeder extends Seeder
                     'book_id' => $data['book_id'],
                 ],
                 [
-                    'status'      => $data['status'],
+                    'status' => $data['status'],
                     'target_date' => $data['target_date'],
                 ]
             );

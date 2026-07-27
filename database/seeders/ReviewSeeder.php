@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Book;
 use App\Models\Review;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class ReviewSeeder extends Seeder
 {
@@ -17,7 +16,7 @@ class ReviewSeeder extends Seeder
     {
         $users = User::orderBy('id')->take(5)->get();
         $books = Book::orderBy('id')->take(11)->get();
- 
+
         $reviewsByBook = [
             // 1冊目（2件）
             [
@@ -85,10 +84,10 @@ class ReviewSeeder extends Seeder
                 ['user' => 1, 'rating' => 2, 'comment' => 'テンポの良い展開と丁寧な描写のバランスが取れていて、読みやすかったです。'],
             ],
         ];
- 
+
         foreach ($reviewsByBook as $bookIndex => $reviews) {
             $book = $books[$bookIndex];
- 
+
             foreach ($reviews as $review) {
                 Review::create([
                     'user_id' => $users[$review['user']]->id,
@@ -98,6 +97,6 @@ class ReviewSeeder extends Seeder
                 ]);
             }
         }
- 
+
     }
 }

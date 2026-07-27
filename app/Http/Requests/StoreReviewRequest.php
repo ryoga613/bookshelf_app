@@ -23,7 +23,6 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'book_id' => ['required', 'integer', 'exists:books,id'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:1000'],
         ];
@@ -37,9 +36,6 @@ class StoreReviewRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'book_id.required' => '書籍を指定してください。',
-            'book_id.integer' => '書籍IDは整数で指定してください。',
-            'book_id.exists' => '指定された書籍が存在しません。',
             'rating.required' => '評価を入力してください。',
             'rating.integer' => '評価は整数で入力してください。',
             'rating.min' => '評価は1以上で入力してください。',
