@@ -32,12 +32,9 @@ class BookController extends Controller
         }
 
         switch ($request->query('sort')) {
+
             case 'oldest':
                 $query->orderBy('created_at', 'asc');
-                break;
-
-            case 'title':
-                $query->orderBy('title', 'asc');
                 break;
 
             case 'rating':
@@ -47,7 +44,11 @@ class BookController extends Controller
                     ->orderBy('reviews_avg_rating', 'desc');
                 break;
 
-            case 'latest':
+            case 'title':
+                $query->orderBy('title', 'desc');
+                break;
+
+            case 'newest':
             default:
                 $query->orderBy('created_at', 'desc');
                 break;
