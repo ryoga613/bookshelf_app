@@ -381,7 +381,7 @@ class BookControllerTest extends TestCase
             'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=1',
             'genres' => [$genre->id],
         ];
-        
+
         $response = $this->actingAs($user)->post(route('books.store', $book));
 
         $this->assertDatabaseHas('books', [
@@ -400,9 +400,8 @@ class BookControllerTest extends TestCase
         ]);
 
         $genre1ForBook1 = Genre::create(['name' => '小説']);
-        $genre2ForBook2 = Genre::create(['name'=>'ビジネス']);
-        $genre3ForBook2 = Genre::create(['name'=>'自己啓発']);
-        
+        $genre2ForBook2 = Genre::create(['name' => 'ビジネス']);
+        $genre3ForBook2 = Genre::create(['name' => '自己啓発']);
 
         $book1 = Book::create([
             'user_id' => $user->id,
@@ -416,9 +415,9 @@ class BookControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('books',
-        ['title' => '吾輩は猫である',
-            'author' => '夏目漱石',
-            'isbn' => '9784101010014',]);
+            ['title' => '吾輩は猫である',
+                'author' => '夏目漱石',
+                'isbn' => '9784101010014', ]);
 
         $book2 = Book::create([
             'user_id' => $user->id,
@@ -428,9 +427,8 @@ class BookControllerTest extends TestCase
             'published_at' => '1936-10-01',
             'description' => '人間関係の原則を説いた、自己啓発書の古典的名著。',
             'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=2',
-            'genres' => 
-                [$genre2ForBook2->id],
-                [$genre3ForBook2->id],
+            'genres' => [$genre2ForBook2->id],
+            [$genre3ForBook2->id],
         ]);
 
         $this->actingAs($user)->post(route('books.update', $book2));
@@ -461,7 +459,7 @@ class BookControllerTest extends TestCase
             'description' => '猫の視点から人間社会を風刺的に描いた、夏目漱石の代表作。',
             'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=1',
             'genres' => [$genre->id],
-        ]);;
+        ]);
 
         $this->assertDataBaseHas('books', [
             'title' => '吾輩は猫である',
@@ -469,7 +467,7 @@ class BookControllerTest extends TestCase
             'isbn' => '9784101010014',
         ]);
 
-        $response = $this->actingAs($user)->delete(route('books.destroy',$book));
+        $response = $this->actingAs($user)->delete(route('books.destroy', $book));
 
         $this->assertDataBaseMissing('books', [
             'title' => '人を動かす',
@@ -477,5 +475,4 @@ class BookControllerTest extends TestCase
             'isbn' => '9784422100524',
         ]);
     }
-
 }
