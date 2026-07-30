@@ -15,17 +15,24 @@ class GenreController extends Controller
         return view('genres.index', compact('genres'));
     }
 
-    public function create()
-    {
-        return View('genres.create');
-    }
-
     public function show(string $id)
     {
         $genre = Genre::withCount('books')->findOrFail($id);
         $books = $genre->books()->latest()->paginate(10);
 
         return View('genres.show', compact('genre', 'books'));
+    }
+
+    public function create()
+    {
+        return View('genres.create');
+    }
+
+    public function store(StoreGenreRequest $request)
+    {
+        $validated = $request->validated();
+        Genre::create($validated);
+        return redirect(route('genres.index'));
     }
 
     public function edit(string $id)
@@ -42,13 +49,6 @@ class GenreController extends Controller
         $genre = Genre::findOrFail($id);
         $genre->update($validated);
 
-        return redirect(route('genres.index'));
-    }
-
-    public function store(StoreGenreRequest $request)
-    {
-        $validated = $request->validated();
-        Genre::create($validated);
         return redirect(route('genres.index'));
     }
 

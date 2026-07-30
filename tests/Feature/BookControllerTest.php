@@ -334,7 +334,7 @@ class BookControllerTest extends TestCase
             'genres' => ['小説'],
         ]);
 
-        $response = $this->actingAs($user)->get(route('books.index', [$book->id]));
+        $response = $this->actingAs($user)->get(route('books.show', [$book->id]));
 
         $response->assertSee('吾輩は猫である', '夏目漱石');
     }
