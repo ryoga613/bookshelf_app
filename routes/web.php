@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ReviewController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'delete'])->name('reviews.destroy');
 
+    // genreコントローラーのルート
+    Route::get('/genres', [GenreController::class, 'index'])->name('genres.index');
+    Route::get('/genres/create', [GenreController::class, 'create'])->name('genres.create');
+    Route::post('/genres', [GenreController::class, 'store'])->name('genres.store');
+    Route::get('/genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
+    Route::put('/genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
+    Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
+    Route::delete('/genres/{genre}', [GenreController::class, 'delete'])->name('genres.destroy');
+
     // 準備中
     Route::get('/ranking', function () {
         return '準備中';
@@ -45,9 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/favorite', function () {
         return '準備中';
     })->name('favorites.index');
-    Route::get('/genres', function () {
-        return '準備中';
-    })->name('genres.index');
     Route::get('/reports', function () {
         return '準備中';
     })->name('reports.index');

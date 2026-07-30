@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreGenreRequest extends FormRequest
+class UpdateGenreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class StoreGenreRequest extends FormRequest
         $genre = $this->route('genre');
 
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('genre', 'name')->ignore($genre),
+            'name' => ['required', 'string', 'max:255', Rule::unique('genres', 'name')->ignore($genre),
             ],
         ];
     }

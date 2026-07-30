@@ -167,7 +167,7 @@ class ReviewControllerTest extends TestCase
 
         $this->assertDatabaseHas('reviews', ['comment' => 'とても、勉強になりました。']);
 
-        $response = $this->actingAs($user)->delete(route('reviews.destroy',$review));
+        $response = $this->actingAs($user)->delete(route('reviews.destroy', $review));
 
         $this->assertDatabaseMissing('reviews', ['rating' => 3, 'comment' => 'とても、勉強になりました。',
         ]);
