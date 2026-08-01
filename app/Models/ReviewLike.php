@@ -10,10 +10,8 @@ class ReviewLike extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'review_id',
-    ];
+    protected $table = 'review_likes';
+    protected $fillable = ['user_id', 'review_id'];
 
     public function user(): BelongsTo
     {

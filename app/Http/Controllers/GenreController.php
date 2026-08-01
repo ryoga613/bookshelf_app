@@ -32,6 +32,7 @@ class GenreController extends Controller
     {
         $validated = $request->validated();
         Genre::create($validated);
+
         return redirect(route('genres.index'));
     }
 
@@ -56,6 +57,7 @@ class GenreController extends Controller
     {
         $genre = Genre::findOrFail($id);
         $genre->delete();
+
         return redirect(route('genres.index'));
     }
 }

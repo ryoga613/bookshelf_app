@@ -6,7 +6,6 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
-use App\Models\Review;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -63,12 +62,10 @@ class BookController extends Controller
 
     public function show(string $id)
     {
+        $book = Book::with('reviews')->findOrFail($id);
+       
 
-        $book = Book::findOrFail($id);
-
-        $review = Review::with('likedByUsers')->get();
-
-        return View('books.show', compact('book', 'review'));
+        return View('books.show', compact('book'));
     }
 
     public function create()
