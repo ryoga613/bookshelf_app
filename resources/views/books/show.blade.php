@@ -160,6 +160,12 @@
                                         <div class="mt-3 flex items-center justify-between">
                                             <!-- いいねボタン -->
                                             @auth
+                                            <!-- @php
+                                                \DB::enableQueryLog();
+                                                $check = Auth::user()->likedReviews;
+                                            @endphp -->
+                                            <!-- <pre>{{ json_encode(\DB::getQueryLog(), JSON_PRETTY_PRINT) }}</pre>
+                                            <pre>likedReviewsの中身(詳細): {{ $check->toJson() }}</pre> -->
                                                 @if(Auth::user()->likedReviews->contains($review->id))
                                                     <form action="{{ route('reviews.like', $review) }}" method="POST" class="inline" novalidate>
                                                         @csrf
