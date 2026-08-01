@@ -11,6 +11,7 @@ class ReviewLike extends Model
     use HasFactory;
 
     protected $table = 'review_likes';
+
     protected $fillable = ['user_id', 'review_id'];
 
     public function user(): BelongsTo

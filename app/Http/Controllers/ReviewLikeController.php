@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ReviewLike;
 use App\Models\Review;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Book;
+use App\Models\ReviewLike;
 
 class ReviewLikeController extends Controller
 {
@@ -16,8 +13,8 @@ class ReviewLikeController extends Controller
         $review_id = $review->id;
         $user_id = auth()->id();
         $data = [
-            'user_id'=>$user_id,
-            'review_id'=>$review_id,
+            'user_id' => $user_id,
+            'review_id' => $review_id,
         ];
 
         $like = ReviewLike::where($data)->first();
@@ -29,6 +26,6 @@ class ReviewLikeController extends Controller
         }
 
         return back();
-        
+
     }
 }

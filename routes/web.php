@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\MyReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use GuzzleHttp\Middleware;
@@ -52,6 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
     Route::delete('/genres/{genre}', [GenreController::class, 'delete'])->name('genres.destroy');
 
+    // my_reportコントローラーのルート
+    Route::get('/reports', [MyReportController::class, 'index'])->name('reports.index');
+
     // 準備中
     Route::get('/ranking', function () {
         return '準備中';
@@ -59,9 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/favorite', function () {
         return '準備中';
     })->name('favorites.index');
-    Route::get('/reports', function () {
-        return '準備中';
-    })->name('reports.index');
+
     Route::get('/reading-plans', function () {
         return '準備中';
     })->name('reading-plans.index');
