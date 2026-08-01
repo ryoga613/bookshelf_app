@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Review;
+use App\Models\ReviewLike;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -13,26 +14,32 @@ class ReviewLikeSeeder extends Seeder
      */
     public function run(): void
     {
-        $reviews = Review::all();
+        $allReviewIds = Review::pluck('id');
         $allUserIds = User::pluck('id');
 
-        // レビューやユーザーが存在しない場合は処理をスキップ
-        if ($reviews->isEmpty() || $allUserIds->isEmpty()) {
-            return;
-        }
+        if ($allReviewIds->isEmpty() || $allUserIds->isEmpty()) {
+        return;
+    }
+        $possibleLikes = collect();
 
-        foreach ($reviews as $review) {
-            $availableUserIds = $allUserIds->reject(function ($userId) use ($review) {
-                return $userId === $review->user_id;
-            });
-
-            $likeCount = rand(0, min(3, $availableUserIds->count()));
-
-            if ($likeCount > 0) {
-                $randomUserIds = $availableUserIds->random($likeCount)->toArray();
-
-                $review->likedByUsers()->syncWithoutDetaching($randomUserIds);
-            }
+    foreach ($allReviewIds as $reviewId) {
+        foreach ($allUserIds as $userId) {
+            $possibleLikes->push([
+                'review_id' => $reviewId,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
+
+    $takeCount = min(30, $possibleLikes->count());
+
+    $selectedLikes = $possibleLikes->shuffle()->take($takeCount)->toArray();
+
+    ReviewLike::insert($selectedLikes);
+    }
 }
+
+    
+

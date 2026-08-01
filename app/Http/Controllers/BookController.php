@@ -63,7 +63,6 @@ class BookController extends Controller
     public function show(string $id)
     {
         $book = Book::with('reviews')->findOrFail($id);
-       
 
         return View('books.show', compact('book'));
     }
