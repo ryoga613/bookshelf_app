@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\ReadingPlanStatus;
 use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
+use App\Models\Book;
 use App\Models\ReadingPlan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Book;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ReadingPlanController extends Controller
 {
@@ -36,6 +36,7 @@ class ReadingPlanController extends Controller
     {
 
         $books = Book::all();
+
         return view('reading-plans.create', compact('books'));
     }
 

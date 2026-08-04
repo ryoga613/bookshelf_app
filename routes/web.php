@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MyReportController;
+use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
@@ -23,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// rankingコントローラーのルート
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 
 Route::middleware('auth')->group(function () {
 
@@ -59,23 +63,18 @@ Route::middleware('auth')->group(function () {
 
     // reading_planコントローラーのルート
     Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
-    Route::get('/reading-plans/{plan}/edit', [ReadingPlanController::class, 'edit'])->name('reading-plans.edit');
-    Route::put('/reading-plans/{plan}', [ReadingPlanController::class, 'update'])->name('reading-plans.update');
     Route::get('/reading-plans/create', [ReadingPlanController::class, 'create'])->name('reading-plans.create');
     Route::post('/reading-plans', [ReadingPlanController::class, 'store'])->name('reading-plans.store');
+    Route::get('/reading-plans/{plan}/edit', [ReadingPlanController::class, 'edit'])->name('reading-plans.edit');
+    Route::put('/reading-plans/{plan}', [ReadingPlanController::class, 'update'])->name('reading-plans.update');
     Route::post('/reading-plans/{plan}/complete', [ReadingPlanController::class, 'complete'])->name('reading-plans.complete');
     Route::delete('/reading-plans/{plan}', [ReadingPlanController::class, 'destroy'])->name('reading-plans.destroy');
+
     // 準備中
-    Route::get('/ranking', function () {
-        return '準備中';
-    })->name('ranking.index');
+
     Route::get('/favorite', function () {
         return '準備中';
     })->name('favorites.index');
-
-    // Route::get('/reading-plans/create', function () {
-    //     return '準備中';
-    // })->name('reading-plans.create');
     Route::get('/notifications', function () {
         return '準備中';
     })->name('notifications.index');
