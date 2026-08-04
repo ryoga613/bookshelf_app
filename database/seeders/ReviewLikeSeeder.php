@@ -18,28 +18,25 @@ class ReviewLikeSeeder extends Seeder
         $allUserIds = User::pluck('id');
 
         if ($allReviewIds->isEmpty() || $allUserIds->isEmpty()) {
-        return;
-    }
+            return;
+        }
         $possibleLikes = collect();
 
-    foreach ($allReviewIds as $reviewId) {
-        foreach ($allUserIds as $userId) {
-            $possibleLikes->push([
-                'review_id' => $reviewId,
-                'user_id' => $userId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        foreach ($allReviewIds as $reviewId) {
+            foreach ($allUserIds as $userId) {
+                $possibleLikes->push([
+                    'review_id' => $reviewId,
+                    'user_id' => $userId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
-    }
 
-    $takeCount = min(30, $possibleLikes->count());
+        $takeCount = min(30, $possibleLikes->count());
 
-    $selectedLikes = $possibleLikes->shuffle()->take($takeCount)->toArray();
+        $selectedLikes = $possibleLikes->shuffle()->take($takeCount)->toArray();
 
-    ReviewLike::insert($selectedLikes);
+        ReviewLike::insert($selectedLikes);
     }
 }
-
-    
-

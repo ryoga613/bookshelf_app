@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MyReportController;
+use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use GuzzleHttp\Middleware;
@@ -56,6 +57,14 @@ Route::middleware('auth')->group(function () {
     // my_reportコントローラーのルート
     Route::get('/reports', [MyReportController::class, 'index'])->name('reports.index');
 
+    // reading_planコントローラーのルート
+    Route::get('/reading-plans', [ReadingPlanController::class, 'index'])->name('reading-plans.index');
+    Route::get('/reading-plans/{plan}/edit', [ReadingPlanController::class, 'edit'])->name('reading-plans.edit');
+    Route::put('/reading-plans/{plan}', [ReadingPlanController::class, 'update'])->name('reading-plans.update');
+    Route::get('/reading-plans/create', [ReadingPlanController::class, 'create'])->name('reading-plans.create');
+    Route::post('/reading-plans', [ReadingPlanController::class, 'store'])->name('reading-plans.store');
+    Route::post('/reading-plans/{plan}/complete', [ReadingPlanController::class, 'complete'])->name('reading-plans.complete');
+    Route::delete('/reading-plans/{plan}', [ReadingPlanController::class, 'destroy'])->name('reading-plans.destroy');
     // 準備中
     Route::get('/ranking', function () {
         return '準備中';
@@ -64,9 +73,9 @@ Route::middleware('auth')->group(function () {
         return '準備中';
     })->name('favorites.index');
 
-    Route::get('/reading-plans', function () {
-        return '準備中';
-    })->name('reading-plans.index');
+    // Route::get('/reading-plans/create', function () {
+    //     return '準備中';
+    // })->name('reading-plans.create');
     Route::get('/notifications', function () {
         return '準備中';
     })->name('notifications.index');
