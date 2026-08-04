@@ -44,7 +44,7 @@ class ReadingPlanController extends Controller
         $validated = $request->validated();
 
         $validated['user_id'] = Auth::id();
-        $validated['status'] = ReadingPlanStatus::NotStarted;
+        $validated['status'] = ReadingPlanStatus::NotCompleted;
         ReadingPlan::create($validated);
 
         return redirect()->route('reading-plans.index');
