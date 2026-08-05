@@ -7,6 +7,7 @@ use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
+use App\Http\Controllers\NotificationController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -70,14 +71,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/reading-plans/{plan}/complete', [ReadingPlanController::class, 'complete'])->name('reading-plans.complete');
     Route::delete('/reading-plans/{plan}', [ReadingPlanController::class, 'destroy'])->name('reading-plans.destroy');
 
+    //Notificationコントローラーのルート
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
     // 準備中
 
     Route::get('/favorite', function () {
         return '準備中';
     })->name('favorites.index');
-    Route::get('/notifications', function () {
-        return '準備中';
-    })->name('notifications.index');
+    
     Route::post('/books/{book}/favorites', function () {
         return '準備中';
     })->name('favorites.toggle');
