@@ -8,6 +8,7 @@ use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewLikeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\FavoriteController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -74,13 +75,9 @@ Route::middleware('auth')->group(function () {
     //Notificationコントローラーのルート
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
-    // 準備中
+    //お気に入り機能のルート
 
-    Route::get('/favorite', function () {
-        return '準備中';
-    })->name('favorites.index');
-    
-    Route::post('/books/{book}/favorites', function () {
-        return '準備中';
-    })->name('favorites.toggle');
+    Route::get('/favorite', [FavoriteController::class, 'index'])->name('favorites.index');
+
+    Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 });
