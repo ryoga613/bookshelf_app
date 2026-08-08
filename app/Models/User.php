@@ -60,11 +60,6 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function getLikedReviewsAttribute()
-    {
-        return $this->likes ?? collect();
-    }
-
     public function readingPlans(): HasMany
     {
         return $this->hasMany(ReadingPlan::class);
