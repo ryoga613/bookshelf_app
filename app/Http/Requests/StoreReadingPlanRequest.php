@@ -31,12 +31,12 @@ class StoreReadingPlanRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'book_id.required' => '書籍を選択してください。',
-            'book_id.integer' => '書籍の指定が正しくありません。',
-            'book_id.exists' => '指定された書籍は存在しません。',
-            'target_date.required' => '有効な日付を入力してください。',
-            'target_date.date' => '日付の形式が正しくありません。',
-            'target_date.after_or_equal' => '本日以降の日付を指定してください。',
+            'book_id.required' => '書籍は必須です',
+            'book_id.integer' => '選択された書籍は存在しません。',
+            'book_id.exists' => '選択された書籍は存在しません。',
+            'target_date.required' => '期日は有効な日付を入力してください。',
+            'target_date.date' => '期日は有効な日付形式で入力してください。',
+            'target_date.after_or_equal' => '期日は今日以降の日付を指定してください。',
         ];
     }
 }
