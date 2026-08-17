@@ -162,7 +162,7 @@ class BookControllerTest extends TestCase
 
         $response = $this->actingAs($user)->deleteJson("api/v1/books/{$book->id}");
 
-        $this->assertDatabaseMissing('books',['title'=>'吾輩は猫である'])
-        ->assertDatabaseMissing('books', ['id' => $book->id]);
+        $this->assertDatabaseMissing('books', ['title' => '吾輩は猫である'])
+            ->assertDatabaseMissing('books', ['id' => $book->id]);
     }
 }
