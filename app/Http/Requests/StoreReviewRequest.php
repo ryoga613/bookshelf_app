@@ -41,7 +41,7 @@ class StoreReviewRequest extends FormRequest
             'rating.min' => '評価は1以上で入力してください。',
             'rating.max' => '評価は5以下で入力してください。',
             'comment.string' => 'コメントは文字列で入力してください。',
-            'comment.required'=>'コメントは必須です。',
+            'comment.required' => 'コメントは必須です。',
             'comment.max' => 'コメントは1000文字以内で入力してください。',
         ];
     }

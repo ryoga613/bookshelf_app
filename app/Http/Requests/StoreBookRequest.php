@@ -38,7 +38,7 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'title.required' => 'タイトルは必須です。',
-            'title.string'=>'タイトルは文字列で入力してください',
+            'title.string' => 'タイトルは文字列で入力してください',
             'author.required' => '著者名は必須です。',
             'isbn.regex' => 'ISBNは13桁の数字で入力してください。',
             'isbn.unique' => 'このISBNは既に使用されています。',
