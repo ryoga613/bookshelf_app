@@ -3,14 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Book;
-use App\Models\Review;
+use App\Models\Favorites;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Review>
+ * @extends Factory<Favorites>
  */
-class ReviewFactory extends Factory
+class FavoriteFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -22,8 +22,6 @@ class ReviewFactory extends Factory
         return [
             'user_id' => User::factory(),
             'book_id' => Book::factory(),
-            'rating' => fake()->numberBetween(1, 5),
-            'comment' => fake()->realText(100),
         ];
     }
 }
