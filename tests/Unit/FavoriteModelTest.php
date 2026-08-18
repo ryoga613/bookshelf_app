@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Book;
 use App\Models\Favorite;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FavoriteModelTest extends TestCase
 {
@@ -19,9 +19,9 @@ class FavoriteModelTest extends TestCase
     {
         $user = User::factory()->create();
         $favorite = Favorite::factory()->create([
-            'user_id' =>$user->id,
+            'user_id' => $user->id,
         ]);
- 
+
         $favoritesUser = $favorite->user;
         $this->assertTrue($favoritesUser->is($user));
 
@@ -31,12 +31,11 @@ class FavoriteModelTest extends TestCase
     {
         $book = Book::factory()->create();
         $favorite = Favorite::factory()->create([
-            'book_id' =>$book->id,
+            'book_id' => $book->id,
         ]);
 
         $favoritedBook = $favorite->book;
-                $this->assertTrue($favoritedBook->is($book));
-
+        $this->assertTrue($favoritedBook->is($book));
 
     }
 }
