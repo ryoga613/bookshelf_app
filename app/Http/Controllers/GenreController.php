@@ -28,6 +28,7 @@ class GenreController extends Controller
         return View('genres.create');
     }
 
+    // user
     public function store(StoreGenreRequest $request)
     {
         $validated = $request->validated();
