@@ -2,11 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Models\Review;
+use App\Models\ReviewLike;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\ReviewLike;
-use App\Models\Review;
+
 class ReviewLikeModelTest extends TestCase
 {
     /**
@@ -20,7 +21,7 @@ class ReviewLikeModelTest extends TestCase
         $user = User::factory()->create();
         $review = Review::factory()->create();
         $reviewLike = ReviewLike::factory()->create([
-            'user_id' =>$user->id,
+            'user_id' => $user->id,
         ]);
 
         $reviewlikedUser = $reviewLike->user;
@@ -33,11 +34,10 @@ class ReviewLikeModelTest extends TestCase
         $review = Review::factory()->create();
         $review = Review::factory()->create();
         $reviewLike = ReviewLike::factory()->create([
-            'review_id' =>$review->id,
+            'review_id' => $review->id,
         ]);
 
         $likedreview = $reviewLike->review;
         $this->assertTrue($likedreview->is($review));
     }
-
 }
