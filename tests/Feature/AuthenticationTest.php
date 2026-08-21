@@ -11,7 +11,6 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    
     public function test_login_screen_can_be_rendered(): void
     {
         $response = $this->get('/login');
@@ -19,8 +18,6 @@ class AuthenticationTest extends TestCase
         $response->assertViewIs('auth.login');
     }
 
-    
-    
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create([
@@ -36,7 +33,6 @@ class AuthenticationTest extends TestCase
         $response->assertViewIs('books.create');
     }
 
-   
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create([
@@ -57,8 +53,8 @@ class AuthenticationTest extends TestCase
     public function test_users_can_not_authenticate_with_unregistered_email(): void
     {
         $user = User::factory()->create([
-            'name'=> '山田太郎',
-            'email'=> 'test@email.com',
+            'name' => '山田太郎',
+            'email' => 'test@email.com',
             'password' => Hash::make('password'),
 
         ]);
@@ -71,7 +67,6 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    
     public function test_email_and_password_are_required(): void
     {
         $response = $this->from('/login')->post('/login', []);
@@ -79,7 +74,6 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-   
     public function test_users_are_rate_limited_after_too_many_login_attempts(): void
     {
         $user = User::factory()->create([
@@ -101,7 +95,6 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-   
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();
@@ -112,7 +105,6 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    
     public function test_guests_are_redirected_from_authenticated_routes(): void
     {
         $response = $this->get('/books');
