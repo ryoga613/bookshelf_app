@@ -27,15 +27,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// rankingコントローラーのルート
+// rankingコントローラーのルート（ゲスト可）
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
+// booksコントローラーのルート（ゲスト可）
+Route::get('books/', [BookController::class, 'index'])->name('books.index');
+Route::get('/books/show/{book}', [BookController::class, 'show'])->name('books.show');
 
 Route::middleware('auth')->group(function () {
 
     // bookコントローラーのルート
-    Route::get('books/', [BookController::class, 'index'])->name('books.index');
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
-    Route::get('/books/show/{book}', [BookController::class, 'show'])->name('books.show');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
