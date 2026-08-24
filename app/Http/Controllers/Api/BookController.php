@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreBookRequest;
 use App\Http\Requests\Api\UpdateBookRequest;
@@ -12,6 +15,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     public function index()
     {
         $books = Book::all();
@@ -27,6 +31,8 @@ class BookController extends Controller
     public function store(StoreBookRequest $request)
     {
         $validated = $request->validated();
+
+        $validated['user_id'] = $request->user()->id;
 
         $book = Book::create($validated);
 
@@ -66,6 +72,7 @@ class BookController extends Controller
                 'message' => '書籍が見つかりません',
             ], 404);
         }
+        $this->authorize('update', $book);
 
         $validated = $request->validated();
 
@@ -89,6 +96,7 @@ class BookController extends Controller
                 'message' => '書籍が見つかりません',
             ], 404);
         }
+        $this->authorize('delete', $book);
 
         $book->delete();
 
