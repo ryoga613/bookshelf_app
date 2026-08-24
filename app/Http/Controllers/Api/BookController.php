@@ -35,6 +35,8 @@ class BookController extends Controller
         $validated['user_id'] = $request->user()->id;
 
         $book = Book::create($validated);
+        $book->genres()->sync($validated['genre_ids']);
+
 
         return response()->json([
             'message' => '書籍を登録しました',
