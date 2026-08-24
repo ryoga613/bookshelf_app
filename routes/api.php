@@ -18,7 +18,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/v1/books', [BookController::class, 'index']);
 Route::get('/v1/books/{book}', [BookController::class, 'show']);
 
-Route::middleware('auth:sanctum')->get('/user', function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/v1/books', [BookController::class, 'store']);
     Route::put('/v1/books/{book}', [BookController::class, 'update']);
