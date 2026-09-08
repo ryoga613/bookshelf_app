@@ -23,10 +23,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // rankingコントローラーのルート（ゲスト可）
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 // booksコントローラーのルート（ゲスト可）
