@@ -11,7 +11,7 @@ class FavoriteController extends Controller
     {
         $books = Book::whereHas('favorites', function ($query) {
             $query->where('user_id', auth()->id());
-        })->paginate(10);
+        })->paginate(10)->withQueryString();
 
         return view('favorites.index', compact('books'));
     }
