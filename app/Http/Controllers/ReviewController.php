@@ -20,7 +20,7 @@ class ReviewController extends Controller
         Review::create($validated);
         $book = Book::findOrFail($id);
 
-        return Redirect::route('books.show', compact('book'));
+        return Redirect::route('books.show', compact('book'))->with('success', 'レビューが作成されました。');
     }
 
     public function edit(string $id)
@@ -37,7 +37,7 @@ class ReviewController extends Controller
         $review->update($request);
         $book = $review->book;
 
-        return Redirect::route('books.show', ['book' => $book->id]);
+        return Redirect::route('books.show', ['book' => $book->id])->with('success', 'レビューが更新されました。');
     }
 
     /**
@@ -49,6 +49,6 @@ class ReviewController extends Controller
         $review->delete();
         $book = $review->book;
 
-        return Redirect::route('books.show', ['book' => $book->id]);
+        return Redirect::route('books.show', ['book' => $book->id])->with('success', 'レビューが削除されました。');
     }
 }
