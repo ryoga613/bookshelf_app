@@ -28,13 +28,12 @@ class GenreController extends Controller
         return View('genres.create');
     }
 
-    // user
     public function store(StoreGenreRequest $request)
     {
         $validated = $request->validated();
         Genre::create($validated);
 
-        return redirect(route('genres.index'));
+        return redirect(route('genres.index'))->with('success', 'ジャンルが作成されました。');
     }
 
     public function edit(string $id)
@@ -51,14 +50,20 @@ class GenreController extends Controller
         $genre = Genre::findOrFail($id);
         $genre->update($validated);
 
-        return redirect(route('genres.index'));
+        return redirect(route('genres.index'))->with('success', 'ジャンルが更新されました。');
     }
 
     public function delete(string $id)
     {
         $genre = Genre::findOrFail($id);
+        
+
+        if($genre->books()->count() > 0) {
+            return redirect(route('genres.index'))->with('error', 'このジャンルには書籍が紐付いているため削除できません。');
+        }
+        
         $genre->delete();
 
-        return redirect(route('genres.index'));
+        return redirect(route('genres.index'))->with('success', 'ジャンルが削除されました。');
     }
 }
