@@ -18,7 +18,7 @@ class BookPolicy
 
     }
 
-    public function create(User $user, Book $book): bool
+    public function store(User $user, Book $book): bool
     {
         return $user->id === $book->user_id;
     }

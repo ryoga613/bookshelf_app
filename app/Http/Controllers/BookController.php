@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class BookController extends Controller
 {
@@ -44,7 +45,7 @@ class BookController extends Controller
                 break;
 
             case 'title':
-                $query->orderBy('title', 'desc');
+                $query->orderBy('title', 'asc');
                 break;
 
             case 'newest':
@@ -53,7 +54,7 @@ class BookController extends Controller
                 break;
         }
 
-        $books = $query->paginate(10);
+        $books = $query->paginate(10)->withQueryString();
         $genres = Genre::all();
         $unreadNotifications = auth()->check() ? auth()->user()->unreadNotifications : collect();
 
@@ -83,7 +84,7 @@ class BookController extends Controller
         $book = Book::create($validated);
         $book->genres()->attach($request->genres);
 
-        return redirect(route('books.index'));
+        return redirect(route('books.index'))->with('success', '書籍を登録しました');
     }
 
     public function edit(string $id)
@@ -102,7 +103,7 @@ class BookController extends Controller
         $book->update($validated);
         $book->genres()->sync($request->genres);
 
-        return redirect(route('books.index'));
+        return redirect(route('books.index'))->with('success', '書籍を更新しました');
     }
 
     public function destroy(string $id)
@@ -111,6 +112,33 @@ class BookController extends Controller
 
         $book->delete();
 
-        return redirect(route('books.index'));
+        return redirect(route('books.index'))->with('success', '書籍を削除しました');
+    }
+
+    public function fetchByIsbn(string $isbn)
+    {
+        $response = Http::get('https://www.googleapis.com/books/v1/volumes', [
+            'q' => 'isbn:'.$isbn,
+        ]);
+
+        if (! $response->successful()) {
+            return response()->json(['error' => '書籍情報の取得に失敗しました。'], 502);
+        }
+
+        $data = $response->json();
+
+        if (empty($data['items'])) {
+            return response()->json(['error' => '該当する書籍が見つかりませんでした。'], 404);
+        }
+
+        $info = $data['items'][0]['volumeInfo'] ?? [];
+
+        return response()->json([
+            'title' => $info['title'] ?? null,
+            'author' => isset($info['authors']) ? implode(', ', $info['authors']) : null,
+            'description' => $info['description'] ?? null,
+            'image_url' => $info['imageLinks']['thumbnail'] ?? null,
+            'published_date' => $info['publishedDate'] ?? null,
+        ]);
     }
 }
