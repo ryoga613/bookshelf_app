@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 // booksコントローラーのルート（ゲスト可）
 Route::get('books/', [BookController::class, 'index'])->name('books.index');
-Route::get('/books/show/{book}', [BookController::class, 'show'])->name('books.show');
 
 Route::middleware('auth')->group(function () {
 
@@ -37,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+    Route::get('/books/isbn/{isbn}', [BookController::class, 'fetchByIsbn'])->name('books.isbn');
 
     // reviewコントローラーのルート
     Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
@@ -78,3 +78,5 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 });
+
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');

@@ -63,6 +63,6 @@ class UpdateBookRequest extends FormRequest
             'genre_ids.min' => 'ジャンルは1つ以上選択してください。',
             'genre_ids.*.integer' => 'ジャンルIDは整数で指定してください。',
             'genre_ids.*.exists' => '選択されたジャンルは存在しません。',
-            ];
+        ];
     }
 }

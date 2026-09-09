@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreBookRequest;
 use App\Http\Requests\Api\UpdateBookRequest;
 use App\Models\Book;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class BookController extends Controller
 {
@@ -16,6 +16,7 @@ class BookController extends Controller
      * Display a listing of the resource.
      */
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     public function index()
     {
         $books = Book::all();
@@ -36,7 +37,6 @@ class BookController extends Controller
 
         $book = Book::create($validated);
         $book->genres()->sync($validated['genre_ids']);
-
 
         return response()->json([
             'message' => '書籍を登録しました',
