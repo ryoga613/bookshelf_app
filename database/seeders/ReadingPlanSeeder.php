@@ -39,7 +39,7 @@ class ReadingPlanSeeder extends Seeder
             [
                 'user_id' => $User1->id,
                 'book_id' => $books[1]->id,
-                'status' => ReadingPlanStatus::NotCompleted,
+                'status' => ReadingPlanStatus::Reading,
                 'target_date' => Carbon::today()->copy(),
             ],
             [
@@ -52,7 +52,7 @@ class ReadingPlanSeeder extends Seeder
             [
                 'user_id' => $User1->id,
                 'book_id' => $books[3]->id,
-                'status' => ReadingPlanStatus::NotCompleted,
+                'status' => ReadingPlanStatus::Reading,
                 'target_date' => Carbon::today()->copy()->addDays(14),
             ],
             [
