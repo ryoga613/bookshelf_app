@@ -1,0 +1,54 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8318
+    [34mall[39m: [
+      [34;4mApp\Models\ReadingPlan[39;24m {#8320
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m1[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8321
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m2[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8322
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m3[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8323
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m4[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8324
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m5[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8325
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m6[39m,
+        [34mstatus[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8326
+        [34muser_id[39m: [35m1[39m,
+        [34mbook_id[39m: [35m7[39m,
+        [34mstatus[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8327
+        [34muser_id[39m: [35m2[39m,
+        [34mbook_id[39m: [35m8[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8328
+        [34muser_id[39m: [35m2[39m,
+        [34mbook_id[39m: [35m9[39m,
+        [34mstatus[39m: [35m0[39m,
+      },
+      [34;4mApp\Models\ReadingPlan[39;24m {#8329
+        [34muser_id[39m: [35m2[39m,
+        [34mbook_id[39m: [35m10[39m,
+        [34mstatus[39m: [35m1[39m,
+      },
+    ],
+  }

@@ -5,13 +5,15 @@ namespace App\Enums;
 enum ReadingPlanStatus: int
 {
     case NotCompleted = 0;
-    case Completed = 1;
+    case Reading = 1;
+    case Completed = 2;
 
     // 日本語表示用のラベル
     public function label(): string
     {
         return match ($this) {
             self::NotCompleted => '未読',
+            self::Reading => '読書中',
             self::Completed => '読了',
         };
     }
@@ -20,6 +22,7 @@ enum ReadingPlanStatus: int
     {
         return match ($this) {
             self::NotCompleted => 'bg-gray-200 text-gray-800',
+            self::Reading => 'bg-blue-100 text-blue-800',
             self::Completed => 'bg-green-100 text-green-800',
         };
     }
