@@ -83,7 +83,7 @@ class BookController extends Controller
         $book = Book::create($validated);
         $book->genres()->attach($request->genres);
 
-        return redirect(route('books.index'));
+        return redirect(route('books.show', compact('book')));
     }
 
     public function edit(string $id)
