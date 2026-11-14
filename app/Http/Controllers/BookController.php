@@ -84,7 +84,7 @@ class BookController extends Controller
         $book = Book::create($validated);
         $book->genres()->attach($request->genres);
 
-        return redirect(route('books.index'))->with('success', '書籍を登録しました');
+        return redirect(route('books.show',compact('book')))->with('success', '書籍を登録しました');
     }
 
     public function edit(string $id)
