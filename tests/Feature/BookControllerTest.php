@@ -376,7 +376,7 @@ class BookControllerTest extends TestCase
             'title' => '吾輩は猫である',
             'author' => '夏目漱石',
             'isbn' => '9784101010014',
-            'published_at' => '1905-01-01',
+            'published_date' => '1905-01-01',
             'description' => '猫の視点から人間社会を風刺的に描いた、夏目漱石の代表作。',
             'image_url' => 'https://placehold.co/200x300/e2e8f0/475569?text=1',
             'genres' => [$genre->id],
@@ -388,6 +388,7 @@ class BookControllerTest extends TestCase
             'title' => '吾輩は猫である',
             'author' => '夏目漱石',
             'isbn' => '9784101010014',
+            'published_at' => '1905-01-01',
         ]);
     }
 

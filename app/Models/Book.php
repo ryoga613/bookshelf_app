@@ -21,6 +21,10 @@ class Book extends Model
         'description',
     ];
 
+    protected $casts = [
+        'published_at' => 'date:Y-m-d',
+    ];
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
