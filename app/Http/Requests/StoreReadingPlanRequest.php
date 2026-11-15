@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Enums\ReadingPlanStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreReadingPlanRequest extends FormRequest
 {
@@ -18,12 +19,20 @@ class StoreReadingPlanRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
         return [
-            'book_id' => ['required', 'integer', 'exists:books,id'],
+            'book_id' => [
+                'required',
+                'integer',
+                'exists:books,id',
+                // 同一ユーザー × 同一書籍で、進行中（読了以外）の計画が既にある場合はエラー
+                Rule::unique('reading_plans', 'book_id')
+                    ->where('user_id', $this->user()->id)
+                    ->whereNot('status', ReadingPlanStatus::Completed->value),
+            ],
             'target_date' => ['required', 'date', 'after_or_equal:today'],
         ];
     }
@@ -31,10 +40,11 @@ class StoreReadingPlanRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'book_id.required' => '書籍は必須です',
+            'book_id.required' => '書籍を選択してください。',
             'book_id.integer' => '選択された書籍は存在しません。',
             'book_id.exists' => '選択された書籍は存在しません。',
-            'target_date.required' => '期日は有効な日付を入力してください。',
+            'book_id.unique' => 'この書籍は既に進行中の読書計画が存在します。',
+            'target_date.required' => '期日は必須です。',
             'target_date.date' => '期日は有効な日付形式で入力してください。',
             'target_date.after_or_equal' => '期日は今日以降の日付を指定してください。',
         ];

@@ -11,6 +11,9 @@
                 <div class="p-6 text-gray-900">
                     <div class="mb-4">
                         <p class="text-sm text-gray-700">対象書籍: <strong>{{ $readingPlan->book->title }}</strong></p>
+                        @error('book_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                         <p class="text-sm text-gray-700">現在の状態:
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $readingPlan->status->badgeClass() }}">
                                 {{ $readingPlan->status->label() }}

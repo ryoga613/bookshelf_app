@@ -77,7 +77,7 @@ class BookController extends Controller
 
     public function store(StoreBookRequest $request)
     {
-        $validated = $request->validated();
+        $validated = $this->toBookAttributes($request->validated());
 
         $validated['user_id'] = auth()->id();
 
@@ -97,7 +97,7 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, string $id)
     {
-        $validated = $request->validated();
+        $validated = $this->toBookAttributes($request->validated());
 
         $book = Book::findOrFail($id);
         $book->update($validated);
@@ -147,5 +147,17 @@ class BookController extends Controller
             'image_url' => $info['imageLinks']['thumbnail'] ?? null,
             'published_date' => $info['publishedDate'] ?? null,
         ]);
+    }
+
+    /**
+     * フォームの入力値を books テーブルのカラムに合わせる
+     * （フォームの published_date → カラムの published_at）
+     */
+    private function toBookAttributes(array $validated): array
+    {
+        $validated['published_at'] = $validated['published_date'];
+        unset($validated['published_date'], $validated['genres']);
+
+        return $validated;
     }
 }
