@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\IndexBookRequest;
 use App\Http\Requests\Api\StoreBookRequest;
 use App\Http\Requests\Api\UpdateBookRequest;
 use App\Models\Book;
@@ -17,12 +18,45 @@ class BookController extends Controller
      */
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function index()
+    public function index(IndexBookRequest $request)
     {
-        $books = Book::all();
+
+        $validated = $request->validated();
+        $keyword = $validated['keyword'] ??null;
+        $genre_id = $validated['genre_id'] ??null;
+
+        $query = Book::with('genres');
+
+        //本のタイトル、著者で絞り込み
+        if($keyword){
+            // % や _ を LIKE のワイルドカードではなく文字として検索するためにエスケープする
+            // （エスケープ文字は MySQL・SQLite の両方で同じように動く「!」を使う）
+            $pattern = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $keyword).'%';
+
+            // ジャンルの条件と組み合わせても OR が外に漏れないように、括弧でまとめる
+            $query->where(function ($q) use ($pattern) {
+                $q->whereRaw("title LIKE ? ESCAPE '!'", [$pattern])
+                    ->orWhereRaw("author LIKE ? ESCAPE '!'", [$pattern]);
+            });
+        }
+
+        //ジャンルで絞り込み（book_genre 中間テーブル経由で、指定ジャンルが紐づく書籍だけに絞る）
+        if($genre_id){
+            $query->whereHas('genres', function ($q) use ($genre_id) {
+                $q->where('genres.id', $genre_id);
+            });
+        }
+
+        $books = $query->orderBy('id')->paginate(10);
 
         return response()->json([
             'data' => $books,
+            'meta' => [
+                'current_page' => $books->currentPage(),
+                'last_page'    => $books->lastPage(),
+                'per_page'     => $books->perPage(),
+                'total'        => $books->total(),
+            ]
         ], 200);
     }
 
@@ -40,7 +74,7 @@ class BookController extends Controller
 
         return response()->json([
             'message' => '書籍を登録しました',
-            'data' => $book,
+            'data' => $book->load('genres'),
         ], 201);
     }
 
@@ -49,12 +83,10 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::find($id);
+        $book = Book::with(['genres', 'reviews'])->find($id);
 
         if (! $book) {
-            return response()->json([
-                'message' => '書籍が見つかりません',
-            ], 404);
+            return $this->notFound();
         }
 
         return response()->json([
@@ -70,19 +102,18 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if (! $book) {
-            return response()->json([
-                'message' => '書籍が見つかりません',
-            ], 404);
+            return $this->notFound();
         }
         $this->authorize('update', $book);
 
         $validated = $request->validated();
 
         $book->update($validated);
+        $book->genres()->sync($validated['genre_ids']);
 
         return response()->json([
             'message' => '書籍を更新しました',
-            'data' => $book,
+            'data' => $book->load('genres'),
         ], 200);
     }
 
@@ -94,9 +125,7 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if (! $book) {
-            return response()->json([
-                'message' => '書籍が見つかりません',
-            ], 404);
+            return $this->notFound();
         }
         $this->authorize('delete', $book);
 
@@ -105,5 +134,15 @@ class BookController extends Controller
         return response()->json([
             'message' => '書籍が削除されました',
         ], 204);
+    }
+
+    /**
+     * 書籍が見つからない場合の 404 レスポンス
+     */
+    private function notFound()
+    {
+        return response()->json([
+            'error' => '書籍が見つかりませんでした。',
+        ], 404);
     }
 }

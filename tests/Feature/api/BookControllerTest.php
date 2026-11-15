@@ -134,7 +134,7 @@ class BookControllerTest extends TestCase
             'genre_ids' => [$genre->id],
         ];
 
-        $response = $this->putJson("/api/v1/books/{$beforeBook->id}", $afterBook);
+        $response = $this->actingAs($user, 'sanctum')->putJson("/api/v1/books/{$beforeBook->id}", $afterBook);
 
         $response->assertStatus(200)
             ->assertJsonPath('data.title', 'ぼっちゃん');
