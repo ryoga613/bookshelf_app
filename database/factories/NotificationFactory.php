@@ -21,7 +21,7 @@ class NotificationFactory extends Factory
         return [
             'type' => 'App\Notifications\BookLikedNotification',
             'user_id' => User::factory(),
-            'data' => fake()->realText(50),
+            'data' => ['title' => fake()->realText(20), 'body' => fake()->realText(50)],
             'read_at' => null,
         ];
     }

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\ReadingPlanStatus;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Notification;
 use App\Models\ReadingPlan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -239,5 +240,36 @@ class ReadingPlanControllerTest extends TestCase
             'book_id' => $book->id,
             'target_date' => Carbon::today()->addDays(2)->format('Y-m-d 00:00:00'),
         ]);
+    }
+
+    public function test_deleting_reading_plan_also_deletes_its_reminders()
+    {
+        $plan = ReadingPlan::factory()->create();
+        $otherPlan = ReadingPlan::factory()->create(['user_id' => $plan->user_id]);
+
+        $reminder = Notification::create([
+            'type' => 'goal_reminder',
+            'user_id' => $plan->user_id,
+            'data' => ['timing' => 'on_due_date', 'title' => '今日が目標日です', 'plan_id' => $plan->id],
+        ]);
+        $otherReminder = Notification::create([
+            'type' => 'goal_reminder',
+            'user_id' => $plan->user_id,
+            'data' => ['timing' => 'on_due_date', 'title' => '今日が目標日です', 'plan_id' => $otherPlan->id],
+        ]);
+        $otherNotification = Notification::create([
+            'type' => 'review_liked',
+            'user_id' => $plan->user_id,
+            'data' => ['message' => 'あなたのレビューにいいねがつきました'],
+        ]);
+
+        $this->actingAs($plan->user)
+            ->delete(route('reading-plans.destroy', $plan))
+            ->assertRedirect(route('reading-plans.index'));
+
+        $this->assertDatabaseMissing('reading_plans', ['id' => $plan->id]);
+        $this->assertDatabaseMissing('notifications', ['id' => $reminder->id]);
+        $this->assertDatabaseHas('notifications', ['id' => $otherReminder->id]);
+        $this->assertDatabaseHas('notifications', ['id' => $otherNotification->id]);
     }
 }

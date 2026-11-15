@@ -26,9 +26,9 @@ class NotificationControllerTest extends TestCase
         $notification = Notification::create([
             'type' => 'review_liked',
             'user_id' => $user->id,
-            'data' => json_encode([
+            'data' => [
                 'message' => 'あなたのレビューにいいねがつきました',
-            ]),
+            ],
             'read_at' => null, ]);
 
         $response = $this->actingAs($user)->get(route('notifications.index'));
@@ -48,9 +48,9 @@ class NotificationControllerTest extends TestCase
         $notification = Notification::create([
             'type' => 'review_liked',
             'user_id' => $user->id,
-            'data' => json_encode([
+            'data' => [
                 'message' => 'あなたのレビューにいいねがつきました',
-            ]),
+            ],
             'read_at' => null, ]);
         $response = $this->actingAs($user)->post(route('notifications.read', $notification));
         $this->assertNotNull($notification->fresh()->read_at);
