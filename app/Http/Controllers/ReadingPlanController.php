@@ -6,10 +6,12 @@ use App\Enums\ReadingPlanStatus;
 use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
 use App\Models\Book;
+use App\Models\Notification;
 use App\Models\ReadingPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReadingPlanController extends Controller
 {
@@ -77,10 +79,21 @@ class ReadingPlanController extends Controller
         return redirect()->route('reading-plans.index');
     }
 
-    public function destroy(string $id)
+    public function destroy(ReadingPlan $plan)
     {
-        $readingPlan = ReadingPlan::findOrFail($id);
-        $readingPlan->delete();
+        DB::transaction(function () use ($plan) {
+            // この読書計画に紐づくリマインド通知を削除
+            // （data は text カラムのため、対象ユーザーの goal_reminder に絞ってから PHP 側で plan_id を照合する）
+            $notificationIds = Notification::where('user_id', $plan->user_id)
+                ->where('type', 'goal_reminder')
+                ->get()
+                ->filter(fn (Notification $notification) => ($notification->data['plan_id'] ?? null) === $plan->id)
+                ->pluck('id');
+
+            Notification::whereIn('id', $notificationIds)->delete();
+
+            $plan->delete();
+        });
 
         return redirect()->route('reading-plans.index');
     }

@@ -117,9 +117,16 @@ class BookController extends Controller
 
     public function fetchByIsbn(string $isbn)
     {
-        $response = Http::get('https://www.googleapis.com/books/v1/volumes', [
-            'q' => 'isbn:'.$isbn,
-        ]);
+        $params = ['q' => 'isbn:'.$isbn];
+        if ($key = config('services.google_books.key')) {
+            $params['key'] = $key;
+        }
+
+        $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', $params);
+
+        if ($response->status() === 429) {
+            return response()->json(['error' => 'Google Books APIの利用上限に達しました。時間をおいて再度お試しください。'], 429);
+        }
 
         if (! $response->successful()) {
             return response()->json(['error' => '書籍情報の取得に失敗しました。'], 502);
