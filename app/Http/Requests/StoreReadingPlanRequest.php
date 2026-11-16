@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ReadingPlanStatus;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +20,7 @@ class StoreReadingPlanRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -28,10 +29,10 @@ class StoreReadingPlanRequest extends FormRequest
                 'required',
                 'integer',
                 'exists:books,id',
-                // 同一ユーザー × 同一書籍で、進行中（読了以外）の計画が既にある場合はエラー
+                // 同一ユーザー × 同一書籍で、進行中（未読・読書中）の計画が既にある場合はエラー
                 Rule::unique('reading_plans', 'book_id')
                     ->where('user_id', $this->user()->id)
-                    ->whereNot('status', ReadingPlanStatus::Completed->value),
+                    ->whereIn('status', ReadingPlanStatus::inProgressValues()),
             ],
             'target_date' => ['required', 'date', 'after_or_equal:today'],
         ];

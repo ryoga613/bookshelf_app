@@ -56,6 +56,7 @@ class ReadingPlanController extends Controller
     public function complete(string $id)
     {
         $readingPlan = ReadingPlan::findOrFail($id);
+        $this->authorize('complete', $readingPlan);
 
         $readingPlan->update([
             'status' => ReadingPlanStatus::Completed,
@@ -67,12 +68,21 @@ class ReadingPlanController extends Controller
 
     public function edit(ReadingPlan $plan)
     {
+        $this->authorize('update', $plan);
+
         return view('reading-plans.edit', ['readingPlan' => $plan]);
     }
 
     public function update(UpdateReadingPlanRequest $request, ReadingPlan $plan)
     {
+        $this->authorize('update', $plan);
+
         $validated = $request->validated();
+
+        // 期限切れの計画は、期日を変更したら「未読」に戻す
+        if ($plan->status === ReadingPlanStatus::Expired) {
+            $validated['status'] = ReadingPlanStatus::NotCompleted;
+        }
 
         $plan->update($validated);
 
@@ -81,6 +91,8 @@ class ReadingPlanController extends Controller
 
     public function destroy(ReadingPlan $plan)
     {
+        $this->authorize('delete', $plan);
+
         DB::transaction(function () use ($plan) {
             // この読書計画に紐づくリマインド通知を削除
             // （data は text カラムのため、対象ユーザーの goal_reminder に絞ってから PHP 側で plan_id を照合する）

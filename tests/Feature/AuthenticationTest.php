@@ -59,12 +59,14 @@ class AuthenticationTest extends TestCase
 
         ]);
 
-        $response = $this->get('/books', [
+        $response = $this->from('/login')->post('/login', [
             'email' => 'aaaaa@example.com',
             'password' => 'password',
         ]);
 
         $response->assertRedirect('/login');
+        $response->assertSessionHasErrors('email');
+        $this->assertGuest();
     }
 
     public function test_email_and_password_are_required(): void
@@ -102,13 +104,17 @@ class AuthenticationTest extends TestCase
         $response = $this->actingAs($user)->post('/logout');
 
         $this->assertGuest();
-        $response->assertRedirect('/');
+        // ログアウト後は書籍一覧へ戻る（LogoutResponse）
+        $response->assertRedirect(route('books.index'));
     }
 
     public function test_guests_are_redirected_from_authenticated_routes(): void
     {
-        $response = $this->get('/books');
+        // 書籍一覧（/books）はゲストも閲覧可。ログイン必須のページはログイン画面へ戻される
+        $this->get('/books')->assertOk();
 
-        $response->assertRedirect('/login');
+        foreach (['/books/create', '/reports', '/reading-plans'] as $uri) {
+            $this->get($uri)->assertRedirect('/login');
+        }
     }
 }

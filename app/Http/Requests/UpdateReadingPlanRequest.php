@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ReadingPlanStatus;
 use App\Models\ReadingPlan;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -20,7 +21,7 @@ class UpdateReadingPlanRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -42,7 +43,7 @@ class UpdateReadingPlanRequest extends FormRequest
 
                 $exists = ReadingPlan::where('user_id', $plan->user_id)
                     ->where('book_id', $plan->book_id)
-                    ->where('status', '!=', ReadingPlanStatus::Completed)
+                    ->whereIn('status', ReadingPlanStatus::inProgressValues())
                     ->whereKeyNot($plan->id)
                     ->exists();
 
