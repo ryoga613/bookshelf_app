@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -84,22 +85,24 @@ class BookController extends Controller
         $book = Book::create($validated);
         $book->genres()->attach($request->genres);
 
-        return redirect(route('books.show',compact('book')))->with('success', '書籍を登録しました');
+        return redirect(route('books.show', compact('book')))->with('success', '書籍を登録しました');
     }
 
     public function edit(string $id)
     {
         $genres = Genre::all();
         $book = Book::findOrFail($id);
+        $this->authorize('update', $book);
 
         return View('books.edit', compact('genres', 'book'));
     }
 
     public function update(UpdateBookRequest $request, string $id)
     {
-        $validated = $this->toBookAttributes($request->validated());
-
         $book = Book::findOrFail($id);
+        $this->authorize('update', $book);
+
+        $validated = $this->toBookAttributes($request->validated());
         $book->update($validated);
         $book->genres()->sync($request->genres);
 
@@ -109,6 +112,7 @@ class BookController extends Controller
     public function destroy(string $id)
     {
         $book = Book::findOrFail($id);
+        $this->authorize('delete', $book);
 
         $book->delete();
 
@@ -117,12 +121,22 @@ class BookController extends Controller
 
     public function fetchByIsbn(string $isbn)
     {
+        // ISBN は 13 桁の数字のみ受け付ける
+        if (! preg_match('/^\d{13}$/', $isbn)) {
+            return response()->json(['error' => 'ISBNは13桁の数字で入力してください。'], 422);
+        }
+
         $params = ['q' => 'isbn:'.$isbn];
         if ($key = config('services.google_books.key')) {
             $params['key'] = $key;
         }
 
-        $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', $params);
+        try {
+            $response = Http::timeout(10)->get('https://www.googleapis.com/books/v1/volumes', $params);
+        } catch (ConnectionException $e) {
+            // タイムアウト・名前解決失敗など、Google Books API に接続できなかった場合
+            return response()->json(['error' => '書籍情報の取得中に通信エラーが発生しました。時間をおいて再度お試しください。'], 503);
+        }
 
         if ($response->status() === 429) {
             return response()->json(['error' => 'Google Books APIの利用上限に達しました。時間をおいて再度お試しください。'], 429);

@@ -267,4 +267,79 @@ class BookApiTest extends TestCase
 
         $this->assertDatabaseHas('books', ['id' => $book->id, 'title' => '吾輩は猫である']);
     }
+
+    // ---- 読み取り系の追加確認 ----
+
+    public function test_index_per_page_parameter_and_validation(): void
+    {
+        Book::factory(5)->create(['user_id' => $this->user->id]);
+
+        $this->getJson('/api/v1/books?per_page=2&page=2')
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('meta.current_page', 2)
+            ->assertJsonPath('meta.per_page', 2)
+            ->assertJsonPath('meta.last_page', 3);
+
+        $this->getJson('/api/v1/books?per_page=101')->assertStatus(422)->assertJsonValidationErrors('per_page');
+        $this->getJson('/api/v1/books?genre_id=9999')->assertStatus(422)->assertJsonValidationErrors('genre_id');
+    }
+
+    public function test_index_returns_empty_data_when_no_books(): void
+    {
+        $this->getJson('/api/v1/books')
+            ->assertOk()
+            ->assertExactJson([
+                'data' => [],
+                'meta' => ['current_page' => 1, 'last_page' => 1, 'per_page' => 20, 'total' => 0],
+            ]);
+    }
+
+    // ---- DELETE /api/v1/books/{id} ----
+
+    public function test_delete_removes_book_and_genre_links(): void
+    {
+        $book = $this->createBook([], [$this->novel->id]);
+
+        $this->actingAs($this->user, 'sanctum')
+            ->deleteJson("/api/v1/books/{$book->id}")
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('books', ['id' => $book->id]);
+        $this->assertDatabaseMissing('book_genre', ['book_id' => $book->id]);
+        $this->getJson("/api/v1/books/{$book->id}")->assertNotFound();
+    }
+
+    public function test_delete_not_found(): void
+    {
+        $this->actingAs($this->user, 'sanctum')
+            ->deleteJson('/api/v1/books/9999')
+            ->assertNotFound()
+            ->assertExactJson(['error' => '書籍が見つかりませんでした。']);
+    }
+
+    // ---- 書き込み系のバリデーション追加確認 ----
+
+    public function test_store_requires_all_required_fields(): void
+    {
+        $this->actingAs($this->user, 'sanctum')
+            ->postJson('/api/v1/books', [])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['title', 'author', 'genre_ids']);
+
+        $this->assertDatabaseCount('books', 0);
+    }
+
+    public function test_store_rejects_duplicate_isbn_and_missing_genre(): void
+    {
+        $this->createBook(['isbn' => '9784101010014']);
+
+        $this->actingAs($this->user, 'sanctum')
+            ->postJson('/api/v1/books', $this->validPayload(['genre_ids' => [9999]]))
+            ->assertStatus(422)
+            ->assertJsonPath('errors.isbn.0', 'このISBNは既に使用されています。')
+            ->assertJsonValidationErrors('genre_ids.0');
+
+        $this->assertDatabaseCount('books', 1);
+    }
 }

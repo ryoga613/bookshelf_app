@@ -244,10 +244,11 @@ class BookControllerTest extends TestCase
 
         $response = $this->actingAs($user)->get('/books?sort=title');
 
+        // 文字コード順（カタカナ → 漢字の順）で並ぶ
         $response->assertSeeInOrder([
-            '吾輩は猫である',
-            '人を動かす',
             'リーダブルコード',
+            '人を動かす',
+            '吾輩は猫である',
         ]);
     }
 
@@ -296,16 +297,19 @@ class BookControllerTest extends TestCase
             'book_id' => $book1->id,
             'user_id' => $user->id,
             'rating' => 3,
+            'comment' => 'テストレビュー',
         ]);
         $reviewForBook2 = Review::create([
             'book_id' => $book2->id,
             'user_id' => $user->id,
             'rating' => 5,
+            'comment' => 'テストレビュー',
         ]);
         $reviewForBook3 = Review::create([
             'book_id' => $book3->id,
             'user_id' => $user->id,
             'rating' => 1,
+            'comment' => 'テストレビュー',
         ]);
         $response = $this->actingAs($user)->get('/books?sort=rating');
 

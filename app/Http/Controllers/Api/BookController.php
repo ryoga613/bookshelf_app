@@ -22,13 +22,13 @@ class BookController extends Controller
     {
 
         $validated = $request->validated();
-        $keyword = $validated['keyword'] ??null;
-        $genre_id = $validated['genre_id'] ??null;
+        $keyword = $validated['keyword'] ?? null;
+        $genre_id = $validated['genre_id'] ?? null;
 
         $query = Book::with('genres');
 
-        //本のタイトル、著者で絞り込み
-        if($keyword){
+        // 本のタイトル、著者で絞り込み
+        if ($keyword) {
             // % や _ を LIKE のワイルドカードではなく文字として検索するためにエスケープする
             // （エスケープ文字は MySQL・SQLite の両方で同じように動く「!」を使う）
             $pattern = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $keyword).'%';
@@ -40,23 +40,26 @@ class BookController extends Controller
             });
         }
 
-        //ジャンルで絞り込み（book_genre 中間テーブル経由で、指定ジャンルが紐づく書籍だけに絞る）
-        if($genre_id){
+        // ジャンルで絞り込み（book_genre 中間テーブル経由で、指定ジャンルが紐づく書籍だけに絞る）
+        if ($genre_id) {
             $query->whereHas('genres', function ($q) use ($genre_id) {
                 $q->where('genres.id', $genre_id);
             });
         }
 
-        $books = $query->orderBy('id')->paginate(10);
+        // 1ページの件数（デフォルト20件、最大100件は IndexBookRequest で検証済み）
+        $perPage = $validated['per_page'] ?? 20;
+
+        $books = $query->orderBy('id')->paginate($perPage);
 
         return response()->json([
-            'data' => $books,
+            'data' => $books->items(),
             'meta' => [
                 'current_page' => $books->currentPage(),
-                'last_page'    => $books->lastPage(),
-                'per_page'     => $books->perPage(),
-                'total'        => $books->total(),
-            ]
+                'last_page' => $books->lastPage(),
+                'per_page' => $books->perPage(),
+                'total' => $books->total(),
+            ],
         ], 200);
     }
 

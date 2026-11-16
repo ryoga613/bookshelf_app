@@ -26,15 +26,17 @@ class ReviewController extends Controller
     public function edit(string $id)
     {
         $review = Review::findOrFail($id);
+        $this->authorize('update', $review);
 
         return View('reviews.edit', compact('review'));
     }
 
     public function update(UpdateReviewRequest $request, string $id)
     {
-        $request = $request->validated();
         $review = Review::findOrFail($id);
-        $review->update($request);
+        $this->authorize('update', $review);
+
+        $review->update($request->validated());
         $book = $review->book;
 
         return Redirect::route('books.show', ['book' => $book->id])->with('success', 'レビューが更新されました。');
@@ -46,6 +48,8 @@ class ReviewController extends Controller
     public function delete(string $id)
     {
         $review = Review::findOrFail($id);
+        $this->authorize('delete', $review);
+
         $review->delete();
         $book = $review->book;
 

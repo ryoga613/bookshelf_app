@@ -8,40 +8,26 @@ use App\Models\User;
 class ReadingPlanPolicy
 {
     /**
-     * Create a new policy instance.
+     * 読書計画の操作はすべて所有者のみ許可する
+     * （ポリシーのメソッドは「ログインユーザー → 対象モデル」の順で引数を受け取る）
      */
-    public function index(ReadingPlan $readingPlan, User $user)
+    public function view(User $user, ReadingPlan $readingPlan): bool
     {
-        return true;
+        return $user->id === $readingPlan->user_id;
     }
 
-    public function create(ReadingPlan $readingPlan, User $user)
+    public function complete(User $user, ReadingPlan $readingPlan): bool
     {
-        return $readingPlan->user_id === $user->id;
+        return $user->id === $readingPlan->user_id;
     }
 
-    public function store(ReadingPlan $readingPlan, User $user)
+    public function update(User $user, ReadingPlan $readingPlan): bool
     {
-        return $readingPlan->user_id === $user->id;
+        return $user->id === $readingPlan->user_id;
     }
 
-    public function complete(ReadingPlan $readingPlan, User $user)
+    public function delete(User $user, ReadingPlan $readingPlan): bool
     {
-        return $readingPlan->user_id === $user->id;
-    }
-
-    public function edit(ReadingPlan $readingPlan, User $user)
-    {
-        return $readingPlan->user_id === $user->id;
-    }
-
-    public function update(ReadingPlan $readingPlan, User $user)
-    {
-        return $readingPlan->user_id === $user->id;
-    }
-
-    public function destroy(ReadingPlan $readingPlan, User $user)
-    {
-        return $readingPlan->user_id === $user->id;
+        return $user->id === $readingPlan->user_id;
     }
 }
